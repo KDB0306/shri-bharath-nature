@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shri & Bharath — Written in the Earth</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth-dark: #0d1a0f;
+    --earth-deep: #1a2e1c;
+    --forest: #2d4a2f;
+    --moss: #4a6741;
+    --sage: #7a9e6e;
+    --sand: #c4a882;
+    --terracotta: #b5735a;
+    --river: #4a8fa8;
+    --sky: #a8c5d4;
+    --cream: #f0e8d8;
+    --gold: #d4a853;
+    --gold-light: #f0c870;
+    --white: #faf7f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--earth-dark);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── MUSIC PLAYER ── */
+  #music-player {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(13, 26, 15, 0.85);
+    border: 1px solid rgba(212, 168, 83, 0.4);
+    padding: 0.7rem 1.2rem;
+    border-radius: 50px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+
+  #music-player:hover { border-color: rgba(212, 168, 83, 0.8); }
+
+  #play-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--terracotta));
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--earth-dark);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  #play-btn:hover { transform: scale(1.1); }
+
+  .music-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--sand);
+    white-space: nowrap;
+  }
+
+  .music-waves {
+    display: flex; gap: 3px; align-items: center;
+  }
+  .music-waves span {
+    display: block;
+    width: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+    animation: wave 1s ease-in-out infinite;
+  }
+  .music-waves span:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .music-waves span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+  .music-waves span:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+  .music-waves span:nth-child(4) { height: 16px; animation-delay: 0.1s; }
+  .music-waves span:nth-child(5) { height: 6px; animation-delay: 0.25s; }
+  .music-waves.paused span { animation-play-state: paused; height: 4px; }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+  }
+
+  /* ── STARS BACKGROUND ── */
+  #stars {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ── FLOATING PETALS ── */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    font-size: 1rem;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(74, 143, 168, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(181, 115, 90, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(45, 74, 47, 0.3) 0%, transparent 60%),
+      linear-gradient(180deg, #050d07 0%, #0d1a0f 40%, #1a2e1c 100%);
+    z-index: -1;
+  }
+
+  /* Earth globe decoration */
+  .earth-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%,
+      rgba(74, 103, 65, 0.15) 0%,
+      rgba(45, 74, 47, 0.08) 40%,
+      transparent 70%);
+    border: 1px solid rgba(122, 158, 110, 0.08);
+    animation: earthRotate 30s linear infinite;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes earthRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .orbit-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 168, 83, 0.08);
+    top: 50%; left: 50%;
+  }
+  .orbit-ring:nth-child(1) { width: 700px; height: 700px; transform: translate(-50%, -50%); }
+  .orbit-ring:nth-child(2) { width: 850px; height: 850px; transform: translate(-50%, -50%) rotate(45deg); animation: pulse 8s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.08; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .hero-names {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.8s forwards;
+  }
+
+  .hero-names .name-shri {
+    color: var(--sky);
+    display: block;
+  }
+
+  .hero-names .ampersand {
+    color: var(--gold);
+    font-size: 0.7em;
+    display: inline-block;
+    animation: heartbeat 2.5s ease-in-out 2s infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.2); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.15); }
+    70% { transform: scale(1); }
+  }
+
+  .hero-names .name-bharath {
+    color: var(--terracotta);
+    display: block;
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: rgba(240, 232, 216, 0.6);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.2s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 2s forwards;
+  }
+
+  .scroll-hint span {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto 4rem;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .divider-icon {
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 6rem 2rem;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    font-style: italic;
+    text-align: center;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 4rem;
+  }
+
+  /* ── NASA IMAGERY SECTION ── */
+  #nasa-section {
+    background: linear-gradient(180deg, var(--earth-dark) 0%, var(--earth-deep) 50%, var(--earth-dark) 100%);
+  }
+
+  .nasa-intro {
+    max-width: 650px;
+    margin: 0 auto 5rem;
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: rgba(240, 232, 216, 0.75);
+    font-style: italic;
+  }
+
+  .nasa-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    gap: 3rem;
+  }
+
+  .nasa-card {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 168, 83, 0.15);
+    transition: border-color 0.4s ease, transform 0.4s ease;
+    background: var(--earth-dark);
+  }
+
+  .nasa-card:hover {
+    border-color: rgba(212, 168, 83, 0.45);
+    transform: translateY(-4px);
+  }
+
+  .nasa-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(0.92) saturate(1.1);
+    transition: filter 0.4s ease;
+  }
+
+  .nasa-card:hover img {
+    filter: brightness(1) saturate(1.2);
+  }
+
+  .nasa-card-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 2rem 1.5rem 1.2rem;
+    background: linear-gradient(to top, rgba(5, 13, 7, 0.95), transparent);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .nasa-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+  }
+
+  .nasa-card-sub {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--sand);
+    text-transform: uppercase;
+    font-family: 'Cinzel', serif;
+  }
+
+  .name-shri-color { color: var(--sky); }
+  .name-bharath-color { color: var(--terracotta); }
+  .name-together-color { color: var(--gold); }
+
+  /* ── LOVE LETTER SECTION ── */
+  #letter-section {
+    background: var(--earth-dark);
+  }
+
+  .letter-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 4rem 3.5rem;
+    background: rgba(26, 46, 28, 0.3);
+    border: 1px solid rgba(212, 168, 83, 0.2);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .letter-container::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px solid rgba(212, 168, 83, 0.08);
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
+  .letter-opening {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: block;
+  }
+
+  .letter-body {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: rgba(240, 232, 216, 0.85);
+    font-style: italic;
+  }
+
+  .letter-body p + p { margin-top: 1.5rem; }
+
+  .letter-signature {
+    margin-top: 3rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-align: right;
+  }
+
+  /* ── REASONS SECTION ── */
+  #reasons-section {
+    background: linear-gradient(180deg, var(--earth-dark) 0%, #0a1a0d 100%);
+  }
+
+  .reasons-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .reason-card {
+    padding: 3rem 2.5rem;
+    background: rgba(26, 46, 28, 0.2);
+    border: 1px solid rgba(122, 158, 110, 0.08);
+    transition: background 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reason-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: linear-gradient(to bottom, var(--gold), var(--terracotta));
+    transition: height 0.4s ease;
+  }
+
+  .reason-card:hover::before { height: 100%; }
+  .reason-card:hover {
+    background: rgba(26, 46, 28, 0.5);
+    border-color: rgba(212, 168, 83, 0.15);
+  }
+
+  .reason-number {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    color: rgba(212, 168, 83, 0.15);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .reason-icon {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .reason-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .reason-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(240, 232, 216, 0.65);
+    font-style: italic;
+  }
+
+  /* ── EARTH QUOTE SECTION ── */
+  #quote-section {
+    background: var(--earth-dark);
+    text-align: center;
+    padding: 8rem 2rem;
+  }
+
+  .big-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+    color: var(--white);
+    position: relative;
+  }
+
+  .big-quote::before {
+    content: '"';
+    position: absolute;
+    top: -2rem; left: -1rem;
+    font-size: 8rem;
+    color: rgba(212, 168, 83, 0.1);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+  }
+
+  .quote-attribution {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 2;
+    background: #050d07;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(212, 168, 83, 0.1);
+  }
+
+  .footer-heart {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    animation: heartbeat 2.5s ease-in-out infinite;
+  }
+
+  .footer-names {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .footer-sub {
+    font-size: 0.85rem;
+    color: rgba(196, 168, 130, 0.4);
+    letter-spacing: 0.1em;
+    font-style: italic;
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── NATURE PARTICLES ── */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(212, 168, 83, 0.3);
+    animation: floatParticle linear infinite;
+  }
+
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- Floating petals -->
+<div id="petals"></div>
+
+<!-- Music Player -->
+<div id="music-player">
+  <button id="play-btn" onclick="toggleMusic()" title="Play/Pause">▶</button>
+  <div>
+    <div class="music-label">♬ Our Song</div>
+  </div>
+  <div class="music-waves paused" id="music-waves">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- Hidden Audio - uses a free romantic piano piece from a CDN -->
+<audio id="bg-music" loop>
+  <!-- Using a free romantic music URL - user can replace with their own song -->
+  <source src="Veppam.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="earth-glow"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+
+  <p class="hero-eyebrow">Written across the face of the Earth</p>
+
+  <h1 class="hero-names">
+    <span class="name-shri">Shri</span>
+    <span class="ampersand">&nbsp;♡&nbsp;</span>
+    <span class="name-bharath">Bharath</span>
+  </h1>
+
+  <p class="hero-sub">Even the rivers know our names</p>
+
+  <div class="scroll-hint">
+    <span>Discover</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── NASA IMAGERY ── -->
+<section id="nasa-section">
+  <span class="section-label reveal">NASA Landsat Imagery</span>
+  <h2 class="section-title reveal">The Earth Wrote Our Story</h2>
+
+  <p class="nasa-intro reveal">
+    From satellites orbiting 400 miles above, NASA captured something extraordinary —
+    the rivers, mountains, deserts and forests of our Earth have always spelled our names.
+    We were written into the planet long before we found each other.
+  </p>
+
+  <div class="nasa-grid">
+    <div class="nasa-card reveal">
+      <img src="shri.png" alt="Shri written in the Earth by NASA">
+      <div class="nasa-card-label">
+        <div>
+          <div class="nasa-card-name name-shri-color">Shri</div>
+          <div class="nasa-card-sub">Written by rivers &amp; mountains</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nasa-card reveal">
+      <img src="Bharath.png" alt="Bharath written in the Earth by NASA">
+      <div class="nasa-card-label">
+        <div>
+          <div class="nasa-card-name name-bharath-color">Bharath</div>
+          <div class="nasa-card-sub">Carved by valleys &amp; desert winds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nasa-card reveal">
+      <img src="ShriBharath.png" alt="Shri & Bharath written in the Earth by NASA">
+      <div class="nasa-card-label">
+        <div>
+          <div class="nasa-card-name name-together-color">Shri &amp; Bharath</div>
+          <div class="nasa-card-sub">Together across the Earth's surface</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LOVE LETTER ── -->
+<section id="letter-section">
+  <span class="section-label reveal">A Letter from the Heart</span>
+  <h2 class="section-title reveal">My Dearest Shri</h2>
+
+  <div class="letter-container reveal">
+    <span class="letter-opening">My love,</span>
+    <div class="letter-body">
+      <p>
+        I always believed love was something you searched for — in crowded places,
+        in quiet moments, in the spaces between words. But then I found you, and I realised
+        love was never hidden. It was already there, carved into the landscape of this earth,
+        waiting for us to look up.
+      </p>
+      <p>
+        Look at what the rivers drew. Look at what the mountains etched across the desert sand.
+        Before we were born, the planet wrote our names together. That is not coincidence —
+        that is destiny, written in the oldest language there is.
+      </p>
+      <p>
+        You are the river that bends gently through my life, shaping everything you touch
+        into something more beautiful. You are the green valley after a long drought,
+        the first light catching snow on a mountainside.
+      </p>
+      <p>
+        I love you — across every continent, through every season,
+        from the deepest ocean floor to the highest peak.
+        Forever is not long enough, but it is where I will start.
+      </p>
+    </div>
+    <div class="letter-signature">— Yours, Always · Bharath ♡</div>
+  </div>
+</section>
+
+<!-- ── REASONS ── -->
+<section id="reasons-section">
+  <span class="section-label reveal">Reasons I Love You</span>
+  <h2 class="section-title reveal">Like the Earth, You Are My World</h2>
+
+  <div class="reasons-grid">
+    <div class="reason-card reveal">
+      <span class="reason-number">01</span>
+      <span class="reason-icon">🌊</span>
+      <span class="reason-title">Like the Ocean</span>
+      <p class="reason-text">Your depth amazes me. Every time I think I know all of you, I discover something new — a laugh, a thought, a quiet kindness I had never noticed before.</p>
+    </div>
+    <div class="reason-card reveal">
+      <span class="reason-number">02</span>
+      <span class="reason-icon">🌿</span>
+      <span class="reason-title">Like a Forest</span>
+      <p class="reason-text">You make me feel safe. In your presence, the world grows quieter and greener, and I breathe more easily than I ever have.</p>
+    </div>
+    <div class="reason-card reveal">
+      <span class="reason-number">03</span>
+      <span class="reason-icon">⭐</span>
+      <span class="reason-title">Like the Stars</span>
+      <p class="reason-text">You light up even the darkest nights. When I am lost, I look for you — and just like the stars, you are always there, steady and luminous.</p>
+    </div>
+    <div class="reason-card reveal">
+      <span class="reason-number">04</span>
+      <span class="reason-icon">🌅</span>
+      <span class="reason-title">Like Sunrise</span>
+      <p class="reason-text">Every single morning with you feels like something new beginning. You make ordinary days extraordinary, and I am grateful for each one.</p>
+    </div>
+    <div class="reason-card reveal">
+      <span class="reason-number">05</span>
+      <span class="reason-icon">🏔️</span>
+      <span class="reason-title">Like a Mountain</span>
+      <p class="reason-text">You are my anchor. No matter what storms roll through, your love stands solid and sure — immovable, eternal, magnificent.</p>
+    </div>
+    <div class="reason-card reveal">
+      <span class="reason-number">06</span>
+      <span class="reason-icon">🌸</span>
+      <span class="reason-title">Like Spring</span>
+      <p class="reason-text">You remind me that after every difficult season, beauty returns. You are the bloom that follows frost — unexpected, radiant, and worth every wait.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUOTE ── -->
+<section id="quote-section">
+  <div class="section-divider reveal">
+    <div class="divider-line"></div>
+    <div class="divider-icon">✦</div>
+    <div class="divider-line"></div>
+  </div>
+  <p class="big-quote reveal">
+    The Earth has known us longer than we have known ourselves —
+    she wrote our names in her rivers before we were born,
+    and she will carry our story long after we are gone.
+  </p>
+  <p class="quote-attribution reveal">— Shri &amp; Bharath, Written in the Earth</p>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-heart">♡</span>
+  <div class="footer-names">Shri &amp; Bharath</div>
+  <p class="footer-sub">Written in the rivers · Carved in the mountains · Forever in the stars</p>
+</footer>
+
+<script>
+// ── Stars ──
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  star.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    top: ${Math.random() * 100}%;
+    left: ${Math.random() * 100}%;
+    animation-delay: ${Math.random() * 5}s;
+    animation-duration: ${2 + Math.random() * 4}s;
+  `;
+  starsContainer.appendChild(star);
+}
+
+// ── Floating petals ──
+const petalsContainer = document.getElementById('petals');
+const petalEmojis = ['🌸', '✨', '🍃', '🌿', '⭐', '💫'];
+for (let i = 0; i < 15; i++) {
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+  petal.style.cssText = `
+    left: ${Math.random() * 100}%;
+    animation-duration: ${8 + Math.random() * 12}s;
+    animation-delay: ${Math.random() * 15}s;
+    font-size: ${0.6 + Math.random() * 0.8}rem;
+  `;
+  petalsContainer.appendChild(petal);
+}
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+reveals.forEach(el => observer.observe(el));
+
+// ── Music Player ──
+const audio = document.getElementById('bg-music');
+const playBtn = document.getElementById('play-btn');
+const waves = document.getElementById('music-waves');
+let isPlaying = false;
+
+audio.volume = 0.4;
+
+// Auto-play on first interaction (browser policy)
+function tryAutoplay() {
+  audio.play().then(() => {
+    isPlaying = true;
+    playBtn.textContent = '⏸';
+    waves.classList.remove('paused');
+  }).catch(() => {
+    // Autoplay blocked — user will need to click
+  });
+}
+
+// Try autoplay immediately, fallback to click
+tryAutoplay();
+
+document.addEventListener('click', () => {
+  if (!isPlaying) tryAutoplay();
+}, { once: true });
+
+function toggleMusic() {
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    playBtn.textContent = '▶';
+    waves.classList.add('paused');
+  } else {
+    audio.play();
+    isPlaying = true;
+    playBtn.textContent = '⏸';
+    waves.classList.remove('paused');
+  }
+}
+</script>
+
+</body>
+</html>
