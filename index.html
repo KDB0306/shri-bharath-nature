@@ -30,170 +30,280 @@
     color: var(--cream);
     font-family: 'Cormorant Garamond', serif;
     overflow-x: hidden;
-    cursor: none; /* hide default cursor */
+    cursor: none;
   }
 
   /* ═══════════════════════════════
-     CUSTOM CURSOR — floating leaf + dot
-  ═══════════════════════════════ */
-  #cursor-dot {
-    position: fixed;
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.08s ease, background 0.3s ease, width 0.2s ease, height 0.2s ease;
-    box-shadow: 0 0 8px rgba(212,168,83,0.8);
-  }
-
-  #cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(212,168,83,0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99998;
-    transform: translate(-50%, -50%);
-    transition: width 0.35s ease, height 0.35s ease, border-color 0.3s ease, opacity 0.3s ease;
-  }
-
-  /* Leaf SVG cursor trail */
-  .cursor-leaf {
-    position: fixed;
-    pointer-events: none;
-    z-index: 99997;
-    font-size: 14px;
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(0deg);
-    transition: opacity 0.1s;
-    animation: leafFade 0.8s ease forwards;
-  }
-
-  @keyframes leafFade {
-    0%   { opacity: 0.7; transform: translate(-50%, -50%) scale(1) rotate(var(--r)); }
-    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3) rotate(calc(var(--r) + 120deg)); }
-  }
-
-  body:hover #cursor-dot { opacity: 1; }
-  body a:hover ~ #cursor-dot,
-  body button:hover ~ #cursor-dot { width: 12px; height: 12px; background: var(--gold-light); }
-
-  /* ═══════════════════════════════
-     MINIMAL NATURE BACKGROUND
-     — deep forest gradient base
-     — subtle SVG botanical silhouettes
-     — slow-drifting mist layers
-     — twinkling stars (CSS only)
+     NATURE PHASES BACKGROUND SYSTEM
+     Phase 1: Forest (hero)
+     Phase 2: Ocean / Sea (nasa section)
+     Phase 3: Mountains (letter)
+     Phase 4: Cherry Blossom Spring (reasons)
+     Phase 5: Desert dusk (quote)
+     Phase 6: Night sky (together + footer)
   ═══════════════════════════════ */
 
-  /* Fixed base gradient — deep forest at night */
-  #bg-base {
-    position: fixed; inset: 0; z-index: 0;
+  /* The fixed canvas that shifts with scroll */
+  #nature-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    transition: background 1.8s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+  }
+
+  /* PHASE BACKGROUNDS */
+  .phase-forest {
     background:
-      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(30,51,32,0.55) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 20% 80%,  rgba(20,40,25,0.4)  0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 80% 20%,  rgba(61,125,154,0.06) 0%, transparent 60%),
-      linear-gradient(170deg, #050c06 0%, #0a1209 35%, #0d1a0e 65%, #071009 100%);
+      radial-gradient(ellipse 90% 55% at 50% 100%, rgba(12,40,14,0.9) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 70% at 10% 80%, rgba(8,28,10,0.8) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 90% 30%, rgba(20,55,22,0.3) 0%, transparent 50%),
+      linear-gradient(175deg,
+        #020b03 0%,
+        #051005 8%,
+        #081508 18%,
+        #0c1e0c 30%,
+        #0f2610 45%,
+        #0a1c0a 60%,
+        #071408 80%,
+        #040d04 100%);
+  }
+
+  .phase-ocean {
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(2,20,45,0.95) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 20% 50%, rgba(5,35,70,0.7) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 80% 60%, rgba(15,60,90,0.5) 0%, transparent 50%),
+      linear-gradient(185deg,
+        #010810 0%,
+        #020d1e 10%,
+        #03152d 22%,
+        #041c3c 35%,
+        #052248 50%,
+        #041a38 65%,
+        #031228 80%,
+        #020a1a 100%);
+  }
+
+  .phase-mountain {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(40,30,20,0.85) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 15% 70%, rgba(28,20,12,0.7) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 35% at 85% 20%, rgba(60,80,100,0.15) 0%, transparent 50%),
+      linear-gradient(168deg,
+        #060810 0%,
+        #0c1018 10%,
+        #121820 22%,
+        #1a2030 35%,
+        #1e2535 50%,
+        #181e2c 65%,
+        #101520 80%,
+        #080c14 100%);
+  }
+
+  .phase-blossom {
+    background:
+      radial-gradient(ellipse 85% 55% at 50% 0%, rgba(80,20,50,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 15% 40%, rgba(60,15,40,0.45) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 45% at 85% 60%, rgba(90,30,65,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 40% at 50% 100%, rgba(25,8,18,0.7) 0%, transparent 55%),
+      linear-gradient(168deg,
+        #0e0510 0%,
+        #160818 10%,
+        #1e0c22 22%,
+        #260f2a 35%,
+        #2a1030 50%,
+        #220d26 65%,
+        #180a1c 80%,
+        #0e0510 100%);
+  }
+
+  .phase-dusk {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(80,25,5,0.65) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 15% 60%, rgba(50,15,5,0.55) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 85% 40%, rgba(25,10,35,0.4) 0%, transparent 50%),
+      linear-gradient(175deg,
+        #12050a 0%,
+        #1c0a0c 12%,
+        #240f0f 24%,
+        #2c1410 36%,
+        #301812 50%,
+        #241210 65%,
+        #180c0c 80%,
+        #0e0608 100%);
+  }
+
+  .phase-night {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 15%, rgba(10,15,35,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 40%, rgba(5,10,28,0.7) 0%, transparent 50%),
+      radial-gradient(ellipse 35% 30% at 80% 60%, rgba(8,5,25,0.5) 0%, transparent 45%),
+      linear-gradient(175deg,
+        #01020a 0%,
+        #020310 10%,
+        #030518 20%,
+        #040818 30%,
+        #050a1e 45%,
+        #040818 60%,
+        #030512 78%,
+        #01020a 100%);
+  }
+
+  /* ═══════════════════════════════
+     PHASE OVERLAY ELEMENTS
+     Layered SVG scenes per phase
+  ═══════════════════════════════ */
+
+  .scene-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
-  }
-
-  /* Mist / fog layers — very subtle, slow */
-  #bg-mist {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
-  }
-  .mist-layer {
-    position: absolute;
-    width: 200%; height: 40%;
-    border-radius: 50%;
-    filter: blur(60px);
     opacity: 0;
-    animation: mistDrift linear infinite;
+    transition: opacity 2s ease;
   }
-  .mist-layer:nth-child(1) {
-    bottom: -5%; left: -50%;
-    background: radial-gradient(ellipse, rgba(45,74,47,0.18) 0%, transparent 70%);
-    animation-duration: 35s; animation-delay: 0s;
-  }
-  .mist-layer:nth-child(2) {
-    bottom: 5%; left: -30%;
-    background: radial-gradient(ellipse, rgba(30,55,35,0.12) 0%, transparent 65%);
-    animation-duration: 50s; animation-delay: -15s;
-  }
-  .mist-layer:nth-child(3) {
-    bottom: 15%; left: -60%;
-    background: radial-gradient(ellipse, rgba(61,92,53,0.08) 0%, transparent 60%);
-    animation-duration: 42s; animation-delay: -8s;
-  }
+  .scene-layer.active { opacity: 1; }
 
-  @keyframes mistDrift {
-    0%   { transform: translateX(0);   opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { transform: translateX(55%); opacity: 0; }
-  }
+  /* ── FOREST SCENE ── */
+  #scene-forest svg { width: 100%; height: 100%; }
 
-  /* CSS stars — tiny scattered dots */
-  #bg-stars {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  /* ── OCEAN SCENE ── */
+  #scene-ocean .wave {
+    position: absolute;
+    left: -10%;
+    width: 120%;
+    border-radius: 50%;
+    background: transparent;
+    border-top: 1px solid rgba(100,180,220,0.06);
+    animation: waveDrift ease-in-out infinite;
   }
-  .s {
+  #scene-ocean .wave:nth-child(1) { bottom: 12%; height: 120px; animation-duration: 8s; border-color: rgba(100,180,220,0.09); }
+  #scene-ocean .wave:nth-child(2) { bottom: 8%;  height: 90px;  animation-duration: 12s; animation-delay:-3s; border-color: rgba(80,160,200,0.07); }
+  #scene-ocean .wave:nth-child(3) { bottom: 4%;  height: 70px;  animation-duration: 10s; animation-delay:-6s; border-color: rgba(60,140,180,0.06); }
+  #scene-ocean .wave:nth-child(4) { bottom: 0%;  height: 60px;  animation-duration: 14s; animation-delay:-2s; border-color: rgba(50,120,160,0.05); }
+  @keyframes waveDrift {
+    0%,100% { transform: translateX(0) scaleY(1); }
+    50%      { transform: translateX(2%) scaleY(1.08); }
+  }
+  /* bioluminescent glow dots */
+  #scene-ocean .bio-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(100,200,220,0.5);
+    filter: blur(2px);
+    animation: bioPulse ease-in-out infinite;
+  }
+  @keyframes bioPulse { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.4)} }
+
+  /* ── MOUNTAIN SCENE ── */
+  #scene-mountain svg { width: 100%; height: 100%; }
+
+  /* ── BLOSSOM SCENE ── */
+  #scene-blossom svg { width: 100%; height: 100%; }
+  .petal-float {
+    position: absolute;
+    pointer-events: none;
+    animation: petalFloat linear infinite;
+    opacity: 0;
+    font-size: 11px;
+  }
+  @keyframes petalFloat {
+    0%   { transform: translateY(-5vh) rotate(0deg) translateX(0); opacity:0; }
+    5%   { opacity: 0.55; }
+    95%  { opacity: 0.2; }
+    100% { transform: translateY(105vh) rotate(900deg) translateX(50px); opacity:0; }
+  }
+  body.cursor-blossom #cursor-dot { background: #f0a0c0; box-shadow: 0 0 12px rgba(240,140,180,0.95); }
+  body.cursor-blossom #cursor-ring { border-color: rgba(240,140,180,0.5); }
+
+  /* ── DUSK SCENE ── */
+  #scene-dusk .dusk-ray {
+    position: absolute;
+    top: 0; left: 50%;
+    transform-origin: top center;
+    background: linear-gradient(to bottom, rgba(220,80,20,0.03), transparent);
+    pointer-events: none;
+    animation: rayPulse ease-in-out infinite;
+  }
+  @keyframes rayPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ── NIGHT SCENE ── */
+  #scene-night .star {
     position: absolute;
     border-radius: 50%;
     background: white;
-    animation: starTwinkle ease-in-out infinite;
+    animation: twinkle ease-in-out infinite;
   }
-  @keyframes starTwinkle {
-    0%, 100% { opacity: 0.06; }
-    50%       { opacity: 0.55; }
-  }
-
-  /* Botanical silhouette — bottom grasses / ferns (pure CSS SVG) */
-  #bg-botanical {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    z-index: 2; pointer-events: none;
-    height: 220px;
-  }
-
-  /* Floating petals — CSS only, no canvas */
-  .petal {
-    position: fixed;
-    pointer-events: none;
-    z-index: 3;
-    font-size: 11px;
+  @keyframes twinkle { 0%,100%{opacity:0.05} 50%{opacity:0.7} }
+  .shooting-star {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(to right, transparent, white, transparent);
+    animation: shoot linear forwards;
     opacity: 0;
-    animation: petalFall linear infinite;
   }
-  @keyframes petalFall {
-    0%   { transform: translateY(-20px) rotate(0deg) translateX(0px);   opacity: 0; }
-    5%   { opacity: 0.55; }
-    95%  { opacity: 0.3; }
-    100% { transform: translateY(105vh) rotate(540deg) translateX(40px); opacity: 0; }
-  }
+  @keyframes shoot { 0%{opacity:0;transform:translateX(0) translateY(0)} 10%{opacity:1} 100%{opacity:0;transform:translateX(300px) translateY(120px)} }
 
-  /* Slow moon glow top-right */
-  #bg-moon {
-    position: fixed; top: -80px; right: -80px;
-    width: 260px; height: 260px;
+  /* ═══════════════════════════════
+     AMBIENT MIST LAYER
+  ═══════════════════════════════ */
+  #ambient-mist {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;
+  }
+  .mist-blob {
+    position: absolute;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 40%,
-      rgba(240,232,216,0.04) 0%,
-      rgba(212,168,83,0.03) 40%,
-      transparent 70%);
-    z-index: 1; pointer-events: none;
-    animation: moonPulse 12s ease-in-out infinite;
+    filter: blur(80px);
+    animation: mistMove ease-in-out infinite;
+    pointer-events: none;
   }
-  @keyframes moonPulse {
-    0%,100% { transform: scale(1);   opacity: 0.7; }
-    50%     { transform: scale(1.05); opacity: 1; }
+  @keyframes mistMove {
+    0%,100% { transform: translate(0,0) scale(1); opacity: 0.6; }
+    33%      { transform: translate(3%,2%) scale(1.05); opacity: 0.9; }
+    66%      { transform: translate(-2%,1%) scale(0.97); opacity: 0.7; }
   }
 
-  /* Vine / branch silhouette top-left */
-  #bg-vine {
-    position: fixed; top: 0; left: 0;
-    z-index: 2; pointer-events: none;
-    opacity: 0.18;
+  /* ═══════════════════════════════
+     CURSOR — nature-adaptive
+  ═══════════════════════════════ */
+  #cursor-dot {
+    position: fixed; width: 8px; height: 8px;
+    border-radius: 50%; pointer-events: none; z-index: 99999;
+    transform: translate(-50%,-50%);
+    transition: background 0.6s ease, width 0.2s ease, height 0.2s ease, box-shadow 0.6s ease;
+    background: var(--gold);
+    box-shadow: 0 0 10px rgba(212,168,83,0.9);
+  }
+  #cursor-ring {
+    position: fixed; width: 38px; height: 38px;
+    border-radius: 50%; pointer-events: none; z-index: 99998;
+    transform: translate(-50%,-50%);
+    border: 1px solid rgba(212,168,83,0.45);
+    transition: width 0.35s ease, height 0.35s ease, border-color 0.6s ease, opacity 0.3s ease;
+  }
+  /* Phase-specific cursor colours */
+  body.cursor-ocean  #cursor-dot { background: #7ad4f0; box-shadow: 0 0 12px rgba(100,200,240,0.9); }
+  body.cursor-ocean  #cursor-ring { border-color: rgba(100,200,240,0.45); }
+  body.cursor-mountain #cursor-dot { background: #b8c8e0; box-shadow: 0 0 10px rgba(160,190,220,0.9); }
+  body.cursor-mountain #cursor-ring { border-color: rgba(160,190,220,0.45); }
+  body.cursor-valley #cursor-dot { background: #7ecf6e; box-shadow: 0 0 10px rgba(100,200,90,0.9); }
+  body.cursor-valley #cursor-ring { border-color: rgba(100,200,90,0.4); }
+  body.cursor-dusk   #cursor-dot { background: #e8875a; box-shadow: 0 0 12px rgba(220,120,60,0.9); }
+  body.cursor-dusk   #cursor-ring { border-color: rgba(220,120,60,0.45); }
+  body.cursor-night  #cursor-dot { background: #c0b8e8; box-shadow: 0 0 14px rgba(180,160,240,0.9); }
+  body.cursor-night  #cursor-ring { border-color: rgba(180,160,240,0.45); }
+
+  /* Leaf / droplet / snowflake trail */
+  .cursor-trail {
+    position: fixed; pointer-events: none; z-index: 99997;
+    font-size: 12px; opacity: 0;
+    transform: translate(-50%,-50%);
+    animation: trailFade 0.85s ease forwards;
+  }
+  @keyframes trailFade {
+    0%   { opacity: 0.75; transform: translate(-50%,-50%) scale(1) rotate(var(--r)); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2) rotate(calc(var(--r) + 200deg)); }
   }
 
   /* ═══════════════════════════════
@@ -202,12 +312,12 @@
   #music-player {
     position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;
     display: flex; align-items: center; gap: 0.8rem;
-    background: rgba(10,18,9,0.88);
+    background: rgba(5,10,5,0.88);
     border: 1px solid rgba(212,168,83,0.4);
     padding: 0.7rem 1.2rem; border-radius: 50px;
     backdrop-filter: blur(14px);
     box-shadow: 0 4px 30px rgba(0,0,0,0.6);
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
   }
   #music-player:hover { border-color: rgba(212,168,83,0.8); }
   #play-btn {
@@ -215,14 +325,14 @@
     background: linear-gradient(135deg, var(--gold), var(--terracotta));
     border: none; cursor: none;
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px; color: var(--earth-dark);
+    font-size: 14px; color: #0a1209;
     transition: transform 0.2s ease; flex-shrink: 0;
   }
   #play-btn:hover { transform: scale(1.1); }
   .music-label { font-size: 0.78rem; letter-spacing: 0.08em; color: var(--sand); white-space: nowrap; }
   .music-waves { display: flex; gap: 3px; align-items: center; }
   .music-waves span { display: block; width: 3px; background: var(--gold); border-radius: 2px; animation: wave 1s ease-in-out infinite; }
-  .music-waves span:nth-child(1) { height: 8px;  animation-delay: 0s; }
+  .music-waves span:nth-child(1) { height: 8px; animation-delay: 0s; }
   .music-waves span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
   .music-waves span:nth-child(3) { height: 10px; animation-delay: 0.3s; }
   .music-waves span:nth-child(4) { height: 16px; animation-delay: 0.1s; }
@@ -239,13 +349,6 @@
     align-items: center; justify-content: center;
     text-align: center; overflow: hidden; z-index: 5;
   }
-  .hero-glow {
-    position: absolute; inset: 0; z-index: -1;
-    background:
-      radial-gradient(ellipse 70% 50% at 50% 55%, rgba(21,35,24,0.6) 0%, transparent 100%);
-  }
-
-  /* Breathing ring around names */
   .breath-ring {
     position: absolute; border-radius: 50%;
     top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -254,10 +357,10 @@
     pointer-events: none;
   }
   .breath-ring:nth-child(1) { width: 420px; height: 420px; animation-duration: 6s; }
-  .breath-ring:nth-child(2) { width: 580px; height: 580px; animation-duration: 9s;  animation-delay: 1.5s; border-color: rgba(144,184,204,0.05); }
-  .breath-ring:nth-child(3) { width: 750px; height: 750px; animation-duration: 13s; animation-delay: 3s;   border-color: rgba(106,143,94,0.04); }
+  .breath-ring:nth-child(2) { width: 580px; height: 580px; animation-duration: 9s; animation-delay: 1.5s; border-color: rgba(144,184,204,0.05); }
+  .breath-ring:nth-child(3) { width: 750px; height: 750px; animation-duration: 13s; animation-delay: 3s; border-color: rgba(106,143,94,0.04); }
   @keyframes breathe {
-    0%,100% { transform: translate(-50%,-50%) scale(1);    opacity: 0.5; }
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
     50%      { transform: translate(-50%,-50%) scale(1.04); opacity: 1; }
   }
 
@@ -271,9 +374,9 @@
     font-weight: 500; letter-spacing: 0.05em; line-height: 1.1;
     opacity: 0; animation: fadeUp 1.2s ease 0.8s forwards;
   }
-  .hero-names .name-shri    { color: var(--sky);        display: block; }
-  .hero-names .ampersand    { color: var(--gold);        font-size: 0.7em; display: inline-block; animation: heartbeat 2.5s ease-in-out 2s infinite; }
-  .hero-names .name-bharath { color: var(--terracotta);  display: block; }
+  .hero-names .name-shri    { color: var(--sky); display: block; }
+  .hero-names .ampersand    { color: var(--gold); font-size: 0.7em; display: inline-block; animation: heartbeat 2.5s ease-in-out 2s infinite; }
+  .hero-names .name-bharath { color: var(--terracotta); display: block; }
   .hero-sub {
     margin-top: 2rem; font-style: italic;
     font-size: clamp(1rem,2.5vw,1.5rem);
@@ -301,23 +404,22 @@
   .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
   .divider-icon { color: var(--gold); font-size: 1.2rem; }
 
-  /* Gentle translucent section backgrounds */
-  #nasa-section     { background: linear-gradient(180deg, rgba(10,18,9,0.7) 0%, rgba(18,30,19,0.75) 50%, rgba(10,18,9,0.7) 100%); backdrop-filter: blur(1px); }
-  #letter-section   { background: rgba(8,14,8,0.72); backdrop-filter: blur(1px); }
-  #reasons-section  { background: linear-gradient(180deg, rgba(10,18,9,0.68) 0%, rgba(12,20,13,0.75) 100%); backdrop-filter: blur(1px); }
-  #quote-section    { background: rgba(8,14,8,0.7); text-align: center; padding: 7rem 2rem; backdrop-filter: blur(1px); }
-  #together-section { background: linear-gradient(180deg, rgba(10,18,9,0.65) 0%, rgba(10,18,9,0.85) 100%); padding: 5rem 2rem 6rem; backdrop-filter: blur(1px); }
+  #nasa-section     { background: rgba(0,0,0,0); }
+  #letter-section   { background: rgba(0,0,0,0); }
+  #reasons-section  { background: rgba(0,0,0,0); }
+  #quote-section    { background: rgba(0,0,0,0); text-align: center; padding: 7rem 2rem; }
+  #together-section { background: rgba(0,0,0,0); padding: 5rem 2rem 6rem; }
 
   /* ═══════════════════════════════
      NASA CARDS
   ═══════════════════════════════ */
   .nasa-intro { max-width: 650px; margin: 0 auto 5rem; text-align: center; font-size: 1.15rem; line-height: 1.95; color: rgba(240,232,216,0.68); font-style: italic; }
   .nasa-grid  { max-width: 1100px; margin: 0 auto; display: grid; gap: 2.5rem; }
-  .nasa-card  { position: relative; border-radius: 3px; overflow: hidden; border: 1px solid rgba(212,168,83,0.12); transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; background: rgba(10,18,9,0.8); }
-  .nasa-card:hover { border-color: rgba(212,168,83,0.4); transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .nasa-card  { position: relative; border-radius: 3px; overflow: hidden; border: 1px solid rgba(100,200,240,0.14); transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; background: rgba(2,15,35,0.6); }
+  .nasa-card:hover { border-color: rgba(100,200,240,0.4); transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
   .nasa-card img { width: 100%; height: auto; display: block; filter: brightness(0.9) saturate(1.1); transition: filter 0.4s ease; }
   .nasa-card:hover img { filter: brightness(1.02) saturate(1.2); }
-  .nasa-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1.5rem 1.2rem; background: linear-gradient(to top, rgba(5,10,5,0.97), transparent); display: flex; align-items: flex-end; justify-content: space-between; }
+  .nasa-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1.5rem 1.2rem; background: linear-gradient(to top, rgba(2,10,25,0.97), transparent); display: flex; align-items: flex-end; justify-content: space-between; }
   .nasa-card-name { font-family: 'Cinzel', serif; font-size: 1.4rem; letter-spacing: 0.15em; }
   .nasa-card-sub  { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--sand); text-transform: uppercase; font-family: 'Cinzel', serif; }
   .name-shri-color    { color: var(--sky); }
@@ -327,8 +429,8 @@
   /* ═══════════════════════════════
      LOVE LETTER
   ═══════════════════════════════ */
-  .letter-container { max-width: 700px; margin: 0 auto; padding: 4rem 3.5rem; background: rgba(21,35,24,0.22); border: 1px solid rgba(212,168,83,0.18); border-radius: 2px; position: relative; }
-  .letter-container::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 1px solid rgba(212,168,83,0.07); pointer-events: none; }
+  .letter-container { max-width: 700px; margin: 0 auto; padding: 4rem 3.5rem; background: rgba(15,22,35,0.35); border: 1px solid rgba(160,190,220,0.18); border-radius: 2px; position: relative; }
+  .letter-container::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 1px solid rgba(160,190,220,0.07); pointer-events: none; }
   .letter-opening   { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 2rem; display: block; }
   .letter-body      { font-size: 1.2rem; line-height: 2.05; color: rgba(240,232,216,0.82); font-style: italic; }
   .letter-body p+p  { margin-top: 1.5rem; }
@@ -338,11 +440,11 @@
      REASONS
   ═══════════════════════════════ */
   .reasons-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 2px; }
-  .reason-card  { padding: 3rem 2.5rem; background: rgba(21,35,24,0.15); border: 1px solid rgba(106,143,94,0.08); transition: background 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden; }
-  .reason-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: linear-gradient(to bottom, var(--gold), var(--terracotta)); transition: height 0.4s ease; }
+  .reason-card  { padding: 3rem 2.5rem; background: rgba(30,5,22,0.28); border: 1px solid rgba(200,100,150,0.10); transition: background 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden; }
+  .reason-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: linear-gradient(to bottom, #f0a0c0, #d4a853); transition: height 0.4s ease; }
   .reason-card:hover::before  { height: 100%; }
-  .reason-card:hover { background: rgba(21,35,24,0.4); border-color: rgba(212,168,83,0.15); }
-  .reason-number { font-family: 'Cinzel', serif; font-size: 2.5rem; color: rgba(212,168,83,0.1); margin-bottom: 1rem; display: block; }
+  .reason-card:hover { background: rgba(40,8,30,0.5); border-color: rgba(220,130,170,0.22); }
+  .reason-number { font-family: 'Cinzel', serif; font-size: 2.5rem; color: rgba(220,130,170,0.12); margin-bottom: 1rem; display: block; }
   .reason-icon   { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
   .reason-title  { font-family: 'Cinzel', serif; font-size: 0.78rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; display: block; }
   .reason-text   { font-size: 1.05rem; line-height: 1.85; color: rgba(240,232,216,0.62); font-style: italic; }
@@ -351,7 +453,7 @@
      QUOTE
   ═══════════════════════════════ */
   .big-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.7rem,3.8vw,3rem); font-weight: 300; font-style: italic; max-width: 820px; margin: 0 auto 2rem; line-height: 1.6; color: var(--white); position: relative; }
-  .big-quote::before { content: '\201C'; position: absolute; top: -2rem; left: -0.5rem; font-size: 9rem; color: rgba(212,168,83,0.07); font-family: 'Cormorant Garamond', serif; line-height: 1; }
+  .big-quote::before { content: '\201C'; position: absolute; top: -2rem; left: -0.5rem; font-size: 9rem; color: rgba(220,80,30,0.07); font-family: 'Cormorant Garamond', serif; line-height: 1; }
   .quote-attribution { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
 
   /* ═══════════════════════════════
@@ -361,17 +463,17 @@
   .together-label { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; display: block; }
   .together-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4.5vw,3.2rem); font-weight: 300; font-style: italic; color: var(--white); margin-bottom: 1.5rem; }
   .together-sub   { font-style: italic; font-size: 1.1rem; color: rgba(240,232,216,0.5); margin-bottom: 3.5rem; line-height: 1.8; }
-  .together-card  { position: relative; border-radius: 3px; overflow: hidden; border: 1px solid rgba(212,168,83,0.25); box-shadow: 0 0 80px rgba(212,168,83,0.05), 0 40px 80px rgba(0,0,0,0.6); transition: transform 0.5s ease, box-shadow 0.5s ease; }
-  .together-card:hover { transform: scale(1.01); box-shadow: 0 0 100px rgba(212,168,83,0.1), 0 40px 100px rgba(0,0,0,0.7); }
+  .together-card  { position: relative; border-radius: 3px; overflow: hidden; border: 1px solid rgba(180,160,240,0.25); box-shadow: 0 0 80px rgba(180,160,240,0.05), 0 40px 80px rgba(0,0,0,0.6); transition: transform 0.5s ease, box-shadow 0.5s ease; }
+  .together-card:hover { transform: scale(1.01); box-shadow: 0 0 100px rgba(180,160,240,0.1), 0 40px 100px rgba(0,0,0,0.7); }
   .together-card img { width: 100%; height: auto; display: block; filter: brightness(0.95) saturate(1.15); }
-  .together-card-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem 2rem; background: linear-gradient(to top, rgba(5,10,5,0.97) 0%, transparent 100%); text-align: center; }
+  .together-card-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem 2rem; background: linear-gradient(to top, rgba(2,2,15,0.97) 0%, transparent 100%); text-align: center; }
   .together-card-names { font-family: 'Cinzel', serif; font-size: clamp(1.5rem,4vw,2.5rem); color: var(--gold); letter-spacing: 0.2em; }
   .together-card-sub   { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--sand); text-transform: uppercase; font-family: 'Cinzel', serif; margin-top: 0.5rem; display: block; }
 
   /* ═══════════════════════════════
      FOOTER
   ═══════════════════════════════ */
-  footer { position: relative; z-index: 5; background: #040a04; padding: 4rem 2rem; text-align: center; border-top: 1px solid rgba(212,168,83,0.1); }
+  footer { position: relative; z-index: 5; background: rgba(1,1,8,0.92); padding: 4rem 2rem; text-align: center; border-top: 1px solid rgba(180,160,240,0.12); }
   .footer-heart { font-size: 2rem; margin-bottom: 1.5rem; display: block; animation: heartbeat 2.5s ease-in-out infinite; }
   .footer-names { font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1rem; }
   .footer-sub   { font-size: 0.85rem; color: rgba(196,168,130,0.35); letter-spacing: 0.1em; font-style: italic; }
@@ -381,81 +483,302 @@
   ═══════════════════════════════ */
   .reveal { opacity: 0; transform: translateY(38px); transition: opacity 0.9s ease, transform 0.9s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ═══════════════════════════════
+     AURORA / SHIMMER (night section)
+  ═══════════════════════════════ */
+  .aurora-band {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: auroraSway ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  .aurora-band.active { opacity: 1; }
+  @keyframes auroraSway {
+    0%,100% { transform: translateX(0) scaleX(1); }
+    33%      { transform: translateX(4%) scaleX(1.08); }
+    66%      { transform: translateX(-3%) scaleX(0.94); }
+  }
 </style>
 </head>
-<body>
+<body class="cursor-forest">
 
 <!-- ── CUSTOM CURSOR ── -->
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
 
-<!-- ── MINIMAL NATURE BACKGROUND ── -->
-<div id="bg-base"></div>
-<div id="bg-moon"></div>
+<!-- ═══════════════════════════════
+     DYNAMIC NATURE BACKGROUND
+═══════════════════════════════ -->
 
-<!-- CSS stars -->
-<div id="bg-stars"></div>
+<!-- Main canvas that transitions between phases -->
+<div id="nature-canvas" class="phase-forest"></div>
 
-<!-- Mist layers -->
-<div id="bg-mist">
-  <div class="mist-layer"></div>
-  <div class="mist-layer"></div>
-  <div class="mist-layer"></div>
-</div>
-
-<!-- Botanical vine SVG top-left -->
-<div id="bg-vine">
-  <svg width="320" height="400" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20,0 C20,60 80,80 60,140 C40,200 100,210 80,280 C60,350 120,360 100,400" stroke="rgba(106,143,94,0.5)" stroke-width="1.2" fill="none"/>
-    <path d="M60,40 C60,40 90,20 110,35" stroke="rgba(106,143,94,0.35)" stroke-width="0.9" fill="none"/>
-    <ellipse cx="118" cy="32" rx="14" ry="8" transform="rotate(-30 118 32)" fill="rgba(74,103,65,0.25)"/>
-    <path d="M50,100 C50,100 20,85 10,100" stroke="rgba(106,143,94,0.3)" stroke-width="0.9" fill="none"/>
-    <ellipse cx="5" cy="97" rx="12" ry="7" transform="rotate(20 5 97)" fill="rgba(74,103,65,0.2)"/>
-    <path d="M72,160 C72,160 105,145 120,160" stroke="rgba(106,143,94,0.35)" stroke-width="0.9" fill="none"/>
-    <ellipse cx="128" cy="157" rx="15" ry="8" transform="rotate(-20 128 157)" fill="rgba(74,103,65,0.22)"/>
-    <path d="M65,220 C65,220 35,205 22,220" stroke="rgba(106,143,94,0.28)" stroke-width="0.9" fill="none"/>
-    <ellipse cx="15" cy="218" rx="13" ry="7" transform="rotate(15 15 218)" fill="rgba(74,103,65,0.18)"/>
-    <path d="M78,285 C78,285 108,270 125,282" stroke="rgba(106,143,94,0.3)" stroke-width="0.9" fill="none"/>
-    <ellipse cx="132" cy="279" rx="14" ry="7" transform="rotate(-25 132 279)" fill="rgba(74,103,65,0.2)"/>
-    <!-- small buds -->
-    <circle cx="62" cy="38" r="3" fill="rgba(212,168,83,0.2)"/>
-    <circle cx="80" cy="160" r="2.5" fill="rgba(212,168,83,0.15)"/>
-    <circle cx="92" cy="285" r="3" fill="rgba(212,168,83,0.18)"/>
+<!-- ── FOREST SCENE ── fireflies + towering trees -->
+<div id="scene-forest" class="scene-layer active">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+    <!-- Far tree silhouettes -->
+    <g opacity="0.22">
+      <path d="M0,900 L0,420 L30,320 L60,420 L60,900Z" fill="#0d2010"/>
+      <path d="M40,900 L40,380 L75,260 L110,380 L110,900Z" fill="#0f2512"/>
+      <path d="M90,900 L90,400 L120,290 L150,400 L150,900Z" fill="#0b1e0d"/>
+      <path d="M130,900 L130,350 L165,230 L200,350 L200,900Z" fill="#112813"/>
+      <path d="M180,900 L180,390 L210,270 L240,390 L240,900Z" fill="#0e2210"/>
+      <path d="M1200,900 L1200,360 L1235,240 L1270,360 L1270,900Z" fill="#0f2512"/>
+      <path d="M1250,900 L1250,400 L1280,280 L1310,400 L1310,900Z" fill="#0d2010"/>
+      <path d="M1300,900 L1300,370 L1335,250 L1370,370 L1370,900Z" fill="#112813"/>
+      <path d="M1360,900 L1360,420 L1390,310 L1420,420 L1420,900Z" fill="#0b1e0d"/>
+      <path d="M1400,900 L1400,380 L1430,270 L1460,380 L1460,900Z" fill="#0e2210"/>
+    </g>
+    <!-- Mid tree layer -->
+    <g opacity="0.38">
+      <path d="M-10,900 L-10,520 L35,380 L80,520 L80,900Z" fill="#081a09"/>
+      <path d="M60,900 L60,490 L110,340 L160,490 L160,900Z" fill="#091c0a"/>
+      <path d="M140,900 L140,510 L185,360 L230,510 L230,900Z" fill="#071808"/>
+      <path d="M1220,900 L1220,500 L1265,350 L1310,500 L1310,900Z" fill="#081a09"/>
+      <path d="M1300,900 L1300,480 L1350,330 L1400,480 L1400,900Z" fill="#091c0a"/>
+      <path d="M1370,900 L1370,520 L1415,375 L1460,520 L1460,900Z" fill="#071808"/>
+    </g>
+    <!-- Ground ferns -->
+    <g opacity="0.28">
+      <path d="M0,900 C100,860 200,870 300,850 C400,830 500,860 600,845 C700,830 800,858 900,845 C1000,832 1100,855 1200,840 C1300,825 1380,850 1440,840 L1440,900Z" fill="#061305"/>
+    </g>
+    <!-- Firefly dots -->
+    <g id="fireflies" opacity="0.9">
+      <circle cx="320" cy="400" r="1.5" fill="#d4ff88" opacity="0"><animate attributeName="opacity" values="0;0.9;0" dur="2.8s" begin="0s" repeatCount="indefinite"/></circle>
+      <circle cx="580" cy="320" r="1.2" fill="#c8ff70" opacity="0"><animate attributeName="opacity" values="0;0.8;0" dur="3.4s" begin="0.8s" repeatCount="indefinite"/></circle>
+      <circle cx="780" cy="450" r="1.5" fill="#d0ff80" opacity="0"><animate attributeName="opacity" values="0;0.85;0" dur="2.2s" begin="1.5s" repeatCount="indefinite"/></circle>
+      <circle cx="950" cy="380" r="1.0" fill="#e0ff90" opacity="0"><animate attributeName="opacity" values="0;0.7;0" dur="3.8s" begin="0.3s" repeatCount="indefinite"/></circle>
+      <circle cx="1100" cy="420" r="1.3" fill="#d4ff88" opacity="0"><animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="2s" repeatCount="indefinite"/></circle>
+      <circle cx="200" cy="360" r="1.2" fill="#c8ff70" opacity="0"><animate attributeName="opacity" values="0;0.75;0" dur="3.1s" begin="1.2s" repeatCount="indefinite"/></circle>
+      <circle cx="450" cy="480" r="1.0" fill="#d0ff80" opacity="0"><animate attributeName="opacity" values="0;0.8;0" dur="2.7s" begin="0.6s" repeatCount="indefinite"/></circle>
+      <circle cx="1250" cy="350" r="1.4" fill="#e0ff90" opacity="0"><animate attributeName="opacity" values="0;0.85;0" dur="3.3s" begin="1.9s" repeatCount="indefinite"/></circle>
+    </g>
+    <!-- Moonbeam through canopy -->
+    <radialGradient id="moonbeam" cx="50%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="rgba(220,235,210,0.04)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <rect width="1440" height="900" fill="url(#moonbeam)"/>
   </svg>
 </div>
 
-<!-- Botanical grasses bottom SVG -->
-<svg id="bg-botanical" viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- left grasses -->
-  <path d="M0,220 C10,160 15,100 8,60 C12,100 20,155 18,220Z" fill="rgba(30,51,32,0.35)"/>
-  <path d="M14,220 C22,155 28,90 18,40 C25,90 35,150 30,220Z" fill="rgba(45,74,47,0.28)"/>
-  <path d="M30,220 C38,170 42,110 35,70 C42,110 50,165 46,220Z" fill="rgba(30,51,32,0.3)"/>
-  <path d="M50,220 C55,175 58,120 52,80 C58,120 65,170 62,220Z" fill="rgba(55,85,45,0.22)"/>
-  <path d="M65,220 C70,180 73,130 68,90 C73,130 80,180 77,220Z" fill="rgba(35,58,35,0.3)"/>
-  <!-- fern frond left -->
-  <path d="M85,220 C90,170 100,130 95,80 C110,120 105,170 100,220Z" fill="rgba(40,66,38,0.25)"/>
-  <path d="M95,150 C110,140 130,148 125,155Z" fill="rgba(50,80,42,0.2)"/>
-  <path d="M93,170 C105,158 125,163 120,172Z" fill="rgba(50,80,42,0.18)"/>
-  <path d="M91,190 C102,178 118,182 114,192Z" fill="rgba(50,80,42,0.16)"/>
-  <!-- right grasses -->
-  <path d="M1440,220 C1432,160 1428,100 1435,60 C1430,100 1422,155 1424,220Z" fill="rgba(30,51,32,0.35)"/>
-  <path d="M1425,220 C1418,155 1412,90 1422,40 C1416,90 1406,150 1410,220Z" fill="rgba(45,74,47,0.28)"/>
-  <path d="M1408,220 C1402,170 1398,110 1405,70 C1399,110 1392,165 1395,220Z" fill="rgba(30,51,32,0.3)"/>
-  <path d="M1390,220 C1385,175 1382,120 1388,80 C1383,120 1376,170 1379,220Z" fill="rgba(55,85,45,0.22)"/>
-  <path d="M1375,220 C1370,180 1367,130 1372,90 C1367,130 1360,180 1363,220Z" fill="rgba(35,58,35,0.3)"/>
-  <!-- fern frond right -->
-  <path d="M1350,220 C1345,170 1335,130 1340,80 C1326,120 1330,170 1335,220Z" fill="rgba(40,66,38,0.25)"/>
-  <path d="M1340,150 C1325,140 1305,148 1310,155Z" fill="rgba(50,80,42,0.2)"/>
-  <path d="M1342,170 C1330,158 1310,163 1315,172Z" fill="rgba(50,80,42,0.18)"/>
-  <path d="M1344,190 C1333,178 1317,182 1321,192Z" fill="rgba(50,80,42,0.16)"/>
-  <!-- centre thin grasses -->
-  <path d="M680,220 C682,185 685,145 681,110 C685,145 690,185 688,220Z" fill="rgba(35,58,35,0.18)"/>
-  <path d="M700,220 C703,190 706,150 702,118 C706,150 712,190 710,220Z" fill="rgba(35,58,35,0.14)"/>
-  <path d="M660,220 C662,192 664,155 660,122 C664,155 668,192 666,220Z" fill="rgba(35,58,35,0.14)"/>
-</svg>
+<!-- ── OCEAN SCENE ── bioluminescent waves -->
+<div id="scene-ocean" class="scene-layer">
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <!-- Bioluminescent dots -->
+  <div class="bio-dot" style="width:3px;height:3px;left:15%;bottom:18%;animation-duration:3.2s;animation-delay:0s"></div>
+  <div class="bio-dot" style="width:4px;height:4px;left:28%;bottom:12%;animation-duration:4s;animation-delay:0.8s"></div>
+  <div class="bio-dot" style="width:2px;height:2px;left:45%;bottom:20%;animation-duration:2.8s;animation-delay:1.5s"></div>
+  <div class="bio-dot" style="width:3px;height:3px;left:62%;bottom:14%;animation-duration:3.6s;animation-delay:0.4s"></div>
+  <div class="bio-dot" style="width:4px;height:4px;left:74%;bottom:22%;animation-duration:4.2s;animation-delay:2s"></div>
+  <div class="bio-dot" style="width:2px;height:2px;left:88%;bottom:10%;animation-duration:3s;animation-delay:1.1s"></div>
+  <!-- Deep glow at horizon -->
+  <div style="position:absolute;top:0;left:0;right:0;height:35%;background:linear-gradient(180deg,rgba(5,40,80,0.3) 0%,transparent 100%);pointer-events:none"></div>
+  <!-- Moonlight on water -->
+  <div style="position:absolute;top:25%;left:45%;width:10%;height:45%;background:linear-gradient(180deg,rgba(160,210,240,0.06) 0%,rgba(100,180,220,0.02) 60%,transparent 100%);transform:skewX(2deg);pointer-events:none"></div>
+</div>
 
-<!-- Floating petals container -->
-<div id="petals-container"></div>
+<!-- ── MOUNTAIN SCENE ── layered silhouettes + aurora -->
+<div id="scene-mountain" class="scene-layer">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+    <!-- Far mountains -->
+    <g opacity="0.25">
+      <path d="M0,900 L0,600 L180,320 L360,560 L480,420 L620,580 L720,340 L900,560 L1040,400 L1180,600 L1300,380 L1440,580 L1440,900Z" fill="#141c28"/>
+    </g>
+    <!-- Mid mountains -->
+    <g opacity="0.45">
+      <path d="M0,900 L0,680 L120,460 L280,640 L400,500 L540,660 L640,440 L800,620 L920,480 L1060,660 L1180,500 L1320,680 L1440,520 L1440,900Z" fill="#0e1520"/>
+    </g>
+    <!-- Near mountains -->
+    <g opacity="0.65">
+      <path d="M0,900 L0,750 L100,580 L240,720 L360,600 L480,750 L580,580 L720,720 L840,600 L960,750 L1060,580 L1200,720 L1320,600 L1440,740 L1440,900Z" fill="#080e18"/>
+    </g>
+    <!-- Snow caps -->
+    <g opacity="0.35" fill="#c8d8e8">
+      <path d="M180,320 L160,360 L200,360Z"/>
+      <path d="M720,340 L700,380 L740,380Z"/>
+      <path d="M1300,380 L1278,420 L1322,420Z"/>
+      <path d="M480,420 L462,455 L498,455Z"/>
+      <path d="M1040,400 L1022,438 L1058,438Z"/>
+    </g>
+    <!-- Aurora shimmer at top -->
+    <defs>
+      <linearGradient id="aurora1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="rgba(40,180,140,0)"/>
+        <stop offset="30%" stop-color="rgba(40,180,140,0.04)"/>
+        <stop offset="60%" stop-color="rgba(100,60,200,0.03)"/>
+        <stop offset="100%" stop-color="rgba(100,60,200,0)"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="720" cy="180" rx="800" ry="120" fill="url(#aurora1)" opacity="0.8">
+      <animate attributeName="cy" values="180;160;180" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="8s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="600" cy="120" rx="600" ry="80" fill="rgba(40,180,140,0.025)" opacity="0.6">
+      <animate attributeName="cx" values="600;700;600" dur="12s" repeatCount="indefinite"/>
+    </ellipse>
+  </svg>
+</div>
+
+<!-- ── BLOSSOM SCENE ── cherry blossom spring night -->
+<div id="scene-blossom" class="scene-layer">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+    <defs>
+      <radialGradient id="blossomGlow" cx="50%" cy="30%" r="55%">
+        <stop offset="0%" stop-color="rgba(180,60,110,0.10)"/>
+        <stop offset="60%" stop-color="rgba(120,30,80,0.05)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(255,230,240,0.18)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+    <!-- Sky glow -->
+    <rect width="1440" height="900" fill="url(#blossomGlow)"/>
+    <!-- Moon -->
+    <circle cx="1100" cy="130" r="55" fill="rgba(255,235,245,0.055)"/>
+    <circle cx="1100" cy="130" r="38" fill="rgba(255,228,240,0.07)">
+      <animate attributeName="r" values="38;40;38" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <ellipse cx="1100" cy="130" rx="120" ry="120" fill="url(#moonGlow)" opacity="0.6"/>
+    <!-- Cherry tree trunks far left -->
+    <g opacity="0.5">
+      <path d="M80,900 L80,500 C80,500 70,450 85,400 C95,360 80,320 90,280" stroke="#2a1020" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M90,280 C90,280 60,260 50,240" stroke="#2a1020" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M90,280 C90,280 115,255 125,235" stroke="#2a1020" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M85,380 C85,380 55,365 40,350" stroke="#2a1020" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M85,380 C85,380 115,360 128,345" stroke="#2a1020" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- Cherry tree trunks far right -->
+    <g opacity="0.5">
+      <path d="M1360,900 L1360,480 C1360,480 1370,430 1355,385 C1345,345 1358,305 1350,265" stroke="#2a1020" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M1350,265 C1350,265 1375,245 1385,222" stroke="#2a1020" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M1350,265 C1350,265 1325,242 1315,220" stroke="#2a1020" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M1355,365 C1355,365 1382,348 1395,332" stroke="#2a1020" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M1355,365 C1355,365 1328,350 1315,336" stroke="#2a1020" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- Blossom cloud puffs - left tree -->
+    <g opacity="0.22">
+      <ellipse cx="75" cy="260" rx="55" ry="40" fill="#c85080"/>
+      <ellipse cx="48" cy="248" rx="35" ry="28" fill="#d06088"/>
+      <ellipse cx="118" cy="248" rx="35" ry="28" fill="#c05078"/>
+      <ellipse cx="85" cy="230" rx="40" ry="30" fill="#d87090"/>
+      <ellipse cx="42" cy="352" rx="32" ry="22" fill="#c05078"/>
+      <ellipse cx="120" cy="348" rx="30" ry="20" fill="#b84870"/>
+    </g>
+    <!-- Blossom cloud puffs - right tree -->
+    <g opacity="0.22">
+      <ellipse cx="1355" cy="238" rx="55" ry="40" fill="#c85080"/>
+      <ellipse cx="1382" cy="226" rx="35" ry="28" fill="#d06088"/>
+      <ellipse cx="1318" cy="224" rx="35" ry="28" fill="#c05078"/>
+      <ellipse cx="1345" cy="208" rx="40" ry="30" fill="#d87090"/>
+      <ellipse cx="1388" cy="335" rx="32" ry="22" fill="#c05078"/>
+      <ellipse cx="1318" cy="338" rx="30" ry="20" fill="#b84870"/>
+    </g>
+    <!-- Ground -->
+    <path d="M0,900 C300,860 600,875 900,865 C1100,858 1280,868 1440,860 L1440,900Z" fill="rgba(20,6,15,0.65)"/>
+    <!-- Fallen petals on ground -->
+    <g opacity="0.2">
+      <ellipse cx="200" cy="882" rx="6" ry="3" fill="#e090b0" transform="rotate(-15 200 882)"/>
+      <ellipse cx="380" cy="878" rx="5" ry="2.5" fill="#d878a0" transform="rotate(20 380 878)"/>
+      <ellipse cx="560" cy="885" rx="6" ry="3" fill="#e090b0" transform="rotate(-8 560 885)"/>
+      <ellipse cx="750" cy="880" rx="5" ry="2.5" fill="#d878a0" transform="rotate(12 750 880)"/>
+      <ellipse cx="950" cy="876" rx="6" ry="3" fill="#e090b0" transform="rotate(-20 950 876)"/>
+      <ellipse cx="1150" cy="882" rx="5" ry="2.5" fill="#d878a0" transform="rotate(5 1150 882)"/>
+      <ellipse cx="1320" cy="878" rx="6" ry="3" fill="#e090b0" transform="rotate(-10 1320 878)"/>
+    </g>
+    <!-- Soft stars in blossom sky -->
+    <circle cx="220" cy="80" r="1" fill="rgba(255,220,235,0.5)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="3.5s" repeatCount="indefinite"/></circle>
+    <circle cx="480" cy="55" r="0.8" fill="rgba(255,220,235,0.4)"><animate attributeName="opacity" values="0.15;0.6;0.15" dur="4.2s" begin="1s" repeatCount="indefinite"/></circle>
+    <circle cx="680" cy="90" r="1.2" fill="rgba(255,215,230,0.45)"><animate attributeName="opacity" values="0.2;0.65;0.2" dur="2.8s" begin="0.5s" repeatCount="indefinite"/></circle>
+    <circle cx="850" cy="40" r="0.9" fill="rgba(255,220,235,0.5)"><animate attributeName="opacity" values="0.15;0.7;0.15" dur="3.8s" begin="2s" repeatCount="indefinite"/></circle>
+    <circle cx="350" cy="120" r="0.8" fill="rgba(255,215,230,0.4)"><animate attributeName="opacity" values="0.2;0.55;0.2" dur="5s" begin="1.5s" repeatCount="indefinite"/></circle>
+  </svg>
+  <!-- Cascading petals - more dense for blossom phase -->
+  <div class="petal-float" style="left:5%;animation-duration:12s;animation-delay:0s;font-size:14px">🌸</div>
+  <div class="petal-float" style="left:14%;animation-duration:16s;animation-delay:2s;font-size:10px">✿</div>
+  <div class="petal-float" style="left:22%;animation-duration:14s;animation-delay:5s;font-size:13px">🌸</div>
+  <div class="petal-float" style="left:31%;animation-duration:18s;animation-delay:1s;font-size:9px">❀</div>
+  <div class="petal-float" style="left:40%;animation-duration:13s;animation-delay:7s;font-size:12px">🌸</div>
+  <div class="petal-float" style="left:50%;animation-duration:20s;animation-delay:3s;font-size:11px">✿</div>
+  <div class="petal-float" style="left:58%;animation-duration:15s;animation-delay:9s;font-size:14px">🌸</div>
+  <div class="petal-float" style="left:67%;animation-duration:17s;animation-delay:4s;font-size:10px">❀</div>
+  <div class="petal-float" style="left:76%;animation-duration:11s;animation-delay:6s;font-size:13px">🌸</div>
+  <div class="petal-float" style="left:85%;animation-duration:19s;animation-delay:0.5s;font-size:9px">✿</div>
+  <div class="petal-float" style="left:93%;animation-duration:14s;animation-delay:8s;font-size:12px">🌸</div>
+</div>
+
+<!-- ── DUSK SCENE ── desert sunset rays -->
+<div id="scene-dusk" class="scene-layer">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+    <!-- Sunset gradient -->
+    <defs>
+      <radialGradient id="sunGlow" cx="50%" cy="38%" r="45%">
+        <stop offset="0%" stop-color="rgba(220,100,30,0.12)"/>
+        <stop offset="50%" stop-color="rgba(180,60,20,0.06)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+    <rect width="1440" height="900" fill="url(#sunGlow)"/>
+    <!-- Light rays -->
+    <g opacity="0.06">
+      <path d="M720,0 L600,900 L840,900Z" fill="rgba(220,110,40,1)"/>
+      <path d="M720,0 L480,900 L680,900Z" fill="rgba(200,90,30,0.7)"/>
+      <path d="M720,0 L900,900 L1040,900Z" fill="rgba(200,90,30,0.7)"/>
+      <path d="M720,0 L340,900 L540,900Z" fill="rgba(180,70,20,0.5)"/>
+      <path d="M720,0 L1100,900 L1260,900Z" fill="rgba(180,70,20,0.5)"/>
+    </g>
+    <!-- Desert horizon / dunes -->
+    <path d="M0,900 C200,820 380,850 600,830 C820,810 1000,840 1200,820 C1320,808 1380,825 1440,815 L1440,900Z" fill="rgba(35,15,5,0.6)"/>
+    <path d="M0,900 C300,860 500,875 720,865 C940,855 1100,868 1440,858 L1440,900Z" fill="rgba(25,10,3,0.7)"/>
+    <!-- Silhouette cacti / Joshua trees -->
+    <g opacity="0.35" fill="#1a0805">
+      <rect x="150" y="800" width="4" height="80"/>
+      <rect x="140" y="820" width="22" height="3"/>
+      <rect x="155" y="830" width="3" height="20" transform="rotate(-15 155 830)"/>
+      <rect x="800" y="790" width="4" height="90"/>
+      <rect x="785" y="810" width="28" height="3"/>
+      <rect x="800" y="820" width="3" height="22" transform="rotate(12 800 820)"/>
+      <rect x="1280" y="805" width="4" height="75"/>
+      <rect x="1268" y="825" width="24" height="3"/>
+    </g>
+    <!-- Stars starting to appear -->
+    <circle cx="300" cy="80" r="1" fill="white" opacity="0.3"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="600" cy="50" r="1.2" fill="white" opacity="0.2"><animate attributeName="opacity" values="0.1;0.4;0.1" dur="4s" begin="1s" repeatCount="indefinite"/></circle>
+    <circle cx="900" cy="70" r="0.8" fill="white" opacity="0.3"><animate attributeName="opacity" values="0.1;0.45;0.1" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></circle>
+    <circle cx="1200" cy="40" r="1" fill="white" opacity="0.25"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="2.8s" begin="1.5s" repeatCount="indefinite"/></circle>
+  </svg>
+</div>
+
+<!-- ── NIGHT SCENE ── full star field + aurora -->
+<div id="scene-night" class="scene-layer">
+  <!-- Star field injected by JS -->
+  <div id="night-stars"></div>
+  <!-- Milky way band -->
+  <div style="position:absolute;top:10%;left:20%;right:15%;height:60%;background:radial-gradient(ellipse at 50% 40%,rgba(200,210,255,0.025) 0%,transparent 70%);transform:rotate(-25deg);pointer-events:none"></div>
+  <!-- Aurora bands -->
+  <div style="position:absolute;top:8%;left:0;right:0;height:25%;background:linear-gradient(180deg,transparent,rgba(30,160,120,0.04),rgba(60,40,160,0.03),transparent);animation:auroraSway 10s ease-in-out infinite;filter:blur(20px)"></div>
+  <div style="position:absolute;top:15%;left:10%;right:10%;height:15%;background:linear-gradient(180deg,transparent,rgba(30,160,120,0.03),transparent);animation:auroraSway 14s ease-in-out infinite;animation-delay:-4s;filter:blur(30px)"></div>
+  <!-- Shooting stars via CSS -->
+  <div class="shooting-star" style="top:15%;left:30%;width:120px;animation:shoot 6s linear 4s infinite"></div>
+  <div class="shooting-star" style="top:25%;left:60%;width:90px;animation:shoot 6s linear 9s infinite"></div>
+  <div class="shooting-star" style="top:10%;left:45%;width:150px;animation:shoot 6s linear 14s infinite"></div>
+</div>
+
+<!-- ═══════════════════════════════
+     AMBIENT MIST
+═══════════════════════════════ -->
+<div id="ambient-mist">
+  <div class="mist-blob" id="mist1" style="width:600px;height:300px;background:rgba(30,80,25,0.06);animation-duration:20s;animation-delay:0s;bottom:-80px;left:-100px"></div>
+  <div class="mist-blob" id="mist2" style="width:400px;height:200px;background:rgba(20,60,18,0.05);animation-duration:28s;animation-delay:-8s;bottom:5%;right:-80px"></div>
+</div>
 
 <!-- ── MUSIC ── -->
 <div id="music-player">
@@ -473,7 +796,6 @@
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-glow"></div>
   <div class="breath-ring"></div>
   <div class="breath-ring"></div>
   <div class="breath-ring"></div>
@@ -615,7 +937,6 @@
     <div class="together-card reveal">
       <img src="ShriBharath.png" alt="Shri and Bharath together written in the Earth">
       <div class="together-card-overlay">
-        <!-- <div class="together-card-names">Shri &amp; Bharath</div> -->
         <span class="together-card-sub">Together across the Earth's surface &nbsp;</span>
       </div>
     </div>
@@ -631,113 +952,203 @@
 
 <script>
 /* ════════════════════════════════════
+   PHASE SYSTEM — scroll-driven backgrounds
+════════════════════════════════════ */
+const phases = [
+  {
+    id: 'hero',
+    canvas: 'phase-forest',
+    scene: 'scene-forest',
+    cursor: 'cursor-forest',
+    mist1: 'rgba(30,80,25,0.06)',
+    mist2: 'rgba(20,60,18,0.05)',
+    trails: ['🌿','🍃','🌱','✦','❀'],
+    trailColor: '#7ecf6e'
+  },
+  {
+    id: 'nasa-section',
+    canvas: 'phase-ocean',
+    scene: 'scene-ocean',
+    cursor: 'cursor-ocean',
+    mist1: 'rgba(10,40,80,0.08)',
+    mist2: 'rgba(5,30,65,0.06)',
+    trails: ['💧','〰','∿','◦','·'],
+    trailColor: '#7ad4f0'
+  },
+  {
+    id: 'letter-section',
+    canvas: 'phase-mountain',
+    scene: 'scene-mountain',
+    cursor: 'cursor-mountain',
+    mist1: 'rgba(25,35,55,0.07)',
+    mist2: 'rgba(20,28,45,0.05)',
+    trails: ['❄','✦','·','◆','❋'],
+    trailColor: '#b8c8e0'
+  },
+  {
+    id: 'reasons-section',
+    canvas: 'phase-blossom',
+    scene: 'scene-blossom',
+    cursor: 'cursor-blossom',
+    mist1: 'rgba(120,30,70,0.06)',
+    mist2: 'rgba(90,20,55,0.05)',
+    trails: ['🌸','❀','✿','·','❋'],
+    trailColor: '#f0a0c0'
+  },
+  {
+    id: 'quote-section',
+    canvas: 'phase-dusk',
+    scene: 'scene-dusk',
+    cursor: 'cursor-dusk',
+    mist1: 'rgba(60,15,5,0.06)',
+    mist2: 'rgba(45,12,3,0.05)',
+    trails: ['✦','·','◦','∙','⋆'],
+    trailColor: '#e8875a'
+  },
+  {
+    id: 'together-section',
+    canvas: 'phase-night',
+    scene: 'scene-night',
+    cursor: 'cursor-night',
+    mist1: 'rgba(10,10,40,0.06)',
+    mist2: 'rgba(8,8,32,0.05)',
+    trails: ['✦','⭐','·','✧','⋆'],
+    trailColor: '#c0b8e8'
+  }
+];
+
+const canvas = document.getElementById('nature-canvas');
+const mist1  = document.getElementById('mist1');
+const mist2  = document.getElementById('mist2');
+let currentPhase = 0;
+
+function setPhase(idx) {
+  if (idx === currentPhase) return;
+  currentPhase = idx;
+  const p = phases[idx];
+
+  // Update canvas class
+  canvas.className = p.canvas;
+
+  // Update scenes
+  document.querySelectorAll('.scene-layer').forEach(s => s.classList.remove('active'));
+  document.getElementById(p.scene).classList.add('active');
+
+  // Update cursor
+  document.body.className = p.cursor;
+
+  // Update mist colours
+  mist1.style.background = p.mist1;
+  mist2.style.background = p.mist2;
+
+  // Update trail emoji pool
+  currentTrails = p.trails;
+  currentTrailColor = p.trailColor;
+}
+
+// Determine which phase to show based on scroll
+function onScroll() {
+  const scrollY = window.scrollY;
+  const wh = window.innerHeight;
+
+  for (let i = phases.length - 1; i >= 0; i--) {
+    const section = document.getElementById(phases[i].id);
+    if (section) {
+      const top = section.getBoundingClientRect().top + scrollY;
+      if (scrollY >= top - wh * 0.5) {
+        setPhase(i);
+        break;
+      }
+    }
+  }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ════════════════════════════════════
+   NIGHT STARS — generated
+════════════════════════════════════ */
+const nightStarsEl = document.getElementById('night-stars');
+for (let i = 0; i < 200; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = Math.random() * 2 + 0.5;
+  s.style.cssText = `
+    width:${sz}px;height:${sz}px;
+    top:${Math.random() * 75}%;
+    left:${Math.random() * 100}%;
+    animation-delay:${Math.random() * 7}s;
+    animation-duration:${2 + Math.random() * 5}s;
+    position:absolute;
+  `;
+  nightStarsEl.appendChild(s);
+}
+
+/* ════════════════════════════════════
    CUSTOM CURSOR
 ════════════════════════════════════ */
 const dot  = document.getElementById('cursor-dot');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
+let currentTrails = phases[0].trails;
+let currentTrailColor = phases[0].trailColor;
 
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-// Ring follows with smooth lag
-(function animRing() {
+(function animCursor() {
   rx += (mx - rx) * 0.10;
   ry += (my - ry) * 0.10;
   dot.style.left  = mx + 'px';
   dot.style.top   = my + 'px';
   ring.style.left = rx + 'px';
   ring.style.top  = ry + 'px';
-  requestAnimationFrame(animRing);
+  requestAnimationFrame(animCursor);
 })();
 
-// Cursor grows on hover over links/buttons
+// Cursor swells on interactive elements
 document.querySelectorAll('a, button, .nasa-card, .reason-card, .together-card').forEach(el => {
   el.addEventListener('mouseenter', () => {
-    ring.style.width  = '56px';
-    ring.style.height = '56px';
-    ring.style.borderColor = 'rgba(212,168,83,0.9)';
-    dot.style.width  = '5px';
+    ring.style.width = '58px';
+    ring.style.height = '58px';
+    dot.style.width = '5px';
     dot.style.height = '5px';
-    dot.style.background = 'rgba(212,168,83,0.5)';
   });
   el.addEventListener('mouseleave', () => {
-    ring.style.width  = '36px';
-    ring.style.height = '36px';
-    ring.style.borderColor = 'rgba(212,168,83,0.5)';
-    dot.style.width  = '8px';
+    ring.style.width = '38px';
+    ring.style.height = '38px';
+    dot.style.width = '8px';
     dot.style.height = '8px';
-    dot.style.background = 'var(--gold)';
   });
 });
 
-// Leaf trail on mouse move
-const leafEmojis = ['🌿','🍃','🌱','✿','❀'];
-let lastLeaf = 0;
+// Trail particles — phase-adaptive
+let lastTrail = 0;
 document.addEventListener('mousemove', e => {
   const now = Date.now();
-  if (now - lastLeaf < 120) return;
-  lastLeaf = now;
-  const leaf = document.createElement('div');
-  leaf.className = 'cursor-leaf';
-  leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+  if (now - lastTrail < 110) return;
+  lastTrail = now;
+  const el = document.createElement('div');
+  el.className = 'cursor-trail';
+  el.textContent = currentTrails[Math.floor(Math.random() * currentTrails.length)];
   const angle = (Math.random() * 360) + 'deg';
-  const dx = (Math.random() - 0.5) * 30 + 'px';
-  const dy = (Math.random() * 20 + 10) + 'px';
-  leaf.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--r:${angle};--dx:${dx};--dy:${dy};font-size:${10+Math.random()*6}px`;
-  document.body.appendChild(leaf);
-  setTimeout(() => leaf.remove(), 900);
+  const dx = (Math.random() - 0.5) * 35 + 'px';
+  const dy = (Math.random() * 25 + 10) + 'px';
+  const sz = 9 + Math.random() * 7;
+  el.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--r:${angle};--dx:${dx};--dy:${dy};font-size:${sz}px;color:${currentTrailColor}`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
 });
-
-/* ════════════════════════════════════
-   CSS STARS — scattered dots
-════════════════════════════════════ */
-const starsEl = document.getElementById('bg-stars');
-for (let i = 0; i < 90; i++) {
-  const s = document.createElement('div');
-  s.className = 's';
-  const size = Math.random() * 1.8 + 0.4;
-  s.style.cssText = `
-    width:${size}px; height:${size}px;
-    top:${Math.random()*70}%;
-    left:${Math.random()*100}%;
-    animation-delay:${Math.random()*6}s;
-    animation-duration:${2+Math.random()*4}s;
-    opacity:0.06;
-  `;
-  starsEl.appendChild(s);
-}
-
-/* ════════════════════════════════════
-   GENTLE CSS PETALS
-════════════════════════════════════ */
-const petalSymbols = ['🌸','🌺','🍃','✿','❀','🌼'];
-const container = document.getElementById('petals-container');
-for (let i = 0; i < 18; i++) {
-  const p = document.createElement('div');
-  p.className = 'petal';
-  p.textContent = petalSymbols[Math.floor(Math.random() * petalSymbols.length)];
-  p.style.cssText = `
-    left:${Math.random()*100}%;
-    top:-10px;
-    font-size:${9+Math.random()*9}px;
-    animation-duration:${12+Math.random()*16}s;
-    animation-delay:${Math.random()*20}s;
-    position:fixed; pointer-events:none; z-index:3;
-  `;
-  container.appendChild(p);
-}
 
 /* ════════════════════════════════════
    SCROLL REVEAL
 ════════════════════════════════════ */
 const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
+const revealObs = new IntersectionObserver(entries => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting)
       setTimeout(() => entry.target.classList.add('visible'), i * 75);
   });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-reveals.forEach(el => observer.observe(el));
+reveals.forEach(el => revealObs.observe(el));
 
 /* ════════════════════════════════════
    MUSIC
@@ -763,6 +1174,9 @@ function toggleMusic() {
     audio.play(); isPlaying = true; playBtn.textContent = '⏸'; waves.classList.remove('paused');
   }
 }
+
+/* Initial phase check */
+onScroll();
 </script>
 </body>
 </html>
